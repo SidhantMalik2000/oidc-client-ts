@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>oidc-client test</title>
-        <link rel="stylesheet" href="../app.css">
+        <title>OIDC Client Callback</title>
     </head>
     <body>
         <div>
             <a href="./sample.html">back to sample</a>
         </div>
         <pre id="out"></pre>
-        <script type="module" src="./sample-callback.js"></script>
 
+        <script type="module">
+            document.addEventListener("DOMContentLoaded", function () {
+                // Detect if the page was accessed via POST
+                if (document.referrer && !window.location.search) {
+                    const formData = new FormData(document.forms[0] || document.body);
+
+                    // Extract `code` and `state` from the form data
+                    const code = formData.get("code");
+                    const state = formData.get("state");
+
+                    if (code && state) {
+                        // Redirect to self with `GET`, preserving `code` and `state`
+                        const newUrl = `${window.location.pathname}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
+                        window.location.replace(newUrl);
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

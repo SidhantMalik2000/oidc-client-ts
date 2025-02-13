@@ -1,9 +1,16 @@
-import { settings } from "./sample-settings";
-import { log } from "./sample";
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("form");
+    const params = new URLSearchParams();
 
-new OidcClient(settings).processSigninResponse().then(function(response) {
-    log("signin response success", response);
-}).catch(function(err) {
-    console.error(err);
-    log(err);
+    for (const element of form.elements) {
+        if (element.name) {
+            params.append(element.name, element.value);
+        }
+    }
+    console.log(params);
+    const url = new URL(window.location.href);
+    url.search = params.toString();
+
+    // Redirect to your main callback handler with the extracted parameters
+    window.location.href = `./callback.html${url.search}`;
 });
